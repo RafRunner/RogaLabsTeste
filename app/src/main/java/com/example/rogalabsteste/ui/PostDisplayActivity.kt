@@ -3,54 +3,77 @@ package com.example.rogalabsteste.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.activity.viewModels
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.rogalabsteste.R
-import com.example.rogalabsteste.model.Comment
 import com.example.rogalabsteste.model.Post
-import com.example.rogalabsteste.services.commentService
 import com.example.rogalabsteste.services.postService
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-
-private const val TAG = "PostDisplayActivity"
 
 class PostDisplayActivity : AppCompatActivity() {
+    private val TAG = "PostDisplayActivity"
+
+    private val postDisplayViewModel by viewModels<PostDisplayViewModel> {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                return PostDisplayViewModel(postService) as T
+            }
+        }
+    }
+
+    private val postDisplayAdapter = PostDisplayAdapter(::toastOnClick)
+    private var hasOngoingRequest = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post_display)
 
-        postService.getPosts(10).enqueue(object : Callback<List<Post>> {
-            override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
-                if (response.code() != 200) {
-                    Log.e(TAG, "Error fetching posts: ${response.code()}")
-                    return
-                }
+        val self = this
 
-                response.body()!!.forEach {
-                    Log.d(TAG, it.toString())
+        findViewById<RecyclerView>(R.id.rvPosts).apply {
+            val linearLayoutManager = LinearLayoutManager(self)
+            setHasFixedSize(true)
+            adapter = postDisplayAdapter
+            layoutManager = linearLayoutManager
+            addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
+            setUpScroller(this, linearLayoutManager)
+        }
+
+        postDisplayViewModel.listPosts.observe(self) {
+            hasOngoingRequest = false
+            postDisplayAdapter.addToPostList(it)
+        }
+
+        hasOngoingRequest = true
+        postDisplayViewModel.fetchMorePosts()
+    }
+
+    fun toastOnClick(post: Post) {
+        Log.d(TAG, "Post #${post.id} Clicked!")
+    }
+
+    private fun setUpScroller(recyclerView: RecyclerView, linearLayoutManager: LinearLayoutManager) {
+        recyclerView.addOnScrollListener(
+            object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                    if (dy <= 0) return
+                    if (hasOngoingRequest) return
+
+                    val lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition()
+                    val items = postDisplayAdapter.itemCount
+
+                    if (lastVisibleItem + 4 < items || items > 100) return
+
+                    Log.i(TAG, "Loading more posts")
+                    hasOngoingRequest = true
+                    postDisplayViewModel.fetchMorePosts()
                 }
             }
-
-            override fun onFailure(call: Call<List<Post>>, t: Throwable) {
-                Log.e(TAG, "Error fetching posts: $t")
-            }
-        })
-
-        val response = commentService.getPostComments(1).enqueue(object : Callback<List<Comment>> {
-            override fun onResponse(call: Call<List<Comment>>, response: Response<List<Comment>>) {
-                if (response.code() != 200) {
-                    Log.e(TAG, "Error fetching comments: ${response.code()}")
-                    return
-                }
-
-                response.body()!!.forEach {
-                    Log.d(TAG, "Comment body: " + it.getFormattedBody())
-                }
-            }
-
-            override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
-                Log.e(TAG, "Error fetching comments: $t")
-            }
-        })
+        )
     }
 }
