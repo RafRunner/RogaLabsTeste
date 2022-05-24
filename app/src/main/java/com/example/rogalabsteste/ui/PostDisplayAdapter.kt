@@ -32,11 +32,13 @@ class PostDisplayAdapter(
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val post = listPosts[position]
 
-        holder.tvPostTitle.text = post.title
-        holder.tvPostBody.text = post.body
+        holder.apply {
+            tvPostTitle.text = post.title
+            tvPostBody.text = post.body
 
-        holder.itemView.setOnClickListener {
-            onPostClicked(post)
+            itemView.setOnClickListener {
+                onPostClicked(post)
+            }
         }
     }
 

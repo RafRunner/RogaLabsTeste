@@ -30,9 +30,11 @@ class CommentDisplayAdapter : RecyclerView.Adapter<CommentDisplayAdapter.Comment
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
         val comment = listComments[position]
 
-        holder.tvCommentName.text = comment.name
-        holder.tvCommentEmail.text = comment.email
-        holder.tvCommentBody.text = comment.body
+        holder.apply {
+            tvCommentName.text = comment.name
+            tvCommentEmail.text = comment.email
+            tvCommentBody.text = comment.body
+        }
     }
 
     override fun getItemCount(): Int = listComments.size

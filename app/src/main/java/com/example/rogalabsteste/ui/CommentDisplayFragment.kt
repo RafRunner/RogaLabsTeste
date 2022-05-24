@@ -54,10 +54,9 @@ class CommentDisplayFragment : Fragment() {
         }
 
         view.findViewById<RecyclerView>(R.id.rvComments).apply {
-            val linearLayoutManager = LinearLayoutManager(activity)
             setHasFixedSize(true)
             adapter = commentDisplayAdapter
-            layoutManager = linearLayoutManager
+            layoutManager = LinearLayoutManager(activity)
             addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
         }
 
