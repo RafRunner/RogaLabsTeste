@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.PostDisplayActivity">
+    tools:context=".ui.PostDisplayActivity"
+    android:id="@+id/clPosts">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tbHome"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:background="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,21 +30,13 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <FrameLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvPosts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:foregroundGravity="center"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintTop_toBottomOf="@+id/tbHome"
-        android:id="@+id/llPosts">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvPosts"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:foregroundGravity="center"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            tools:layout_editor_absoluteX="5dp"
-            tools:listitem="@layout/item_post" />
-
-    </FrameLayout>
+        tools:listitem="@layout/item_post" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

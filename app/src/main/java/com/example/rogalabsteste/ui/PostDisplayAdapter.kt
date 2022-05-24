@@ -18,7 +18,6 @@ class PostDisplayAdapter(
     inner class PostViewHolder(postView: View) : RecyclerView.ViewHolder(postView) {
         val tvPostTitle: TextView = postView.findViewById(R.id.tvPostTitle)
         val tvPostBody: TextView = postView.findViewById(R.id.tvPostBody)
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {

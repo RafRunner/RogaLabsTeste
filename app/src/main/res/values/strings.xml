@@ -3,5 +3,8 @@
     <string name="postagens_recentes">Postagens Recentes</string>
     <string name="title_placeholder"><![CDATA[<Title>]]></string>
     <string name="body_placeholder"><![CDATA[<Body>]]></string>
-    <string name="commend_header">O que a galera comentou sobre $postTitle</string>
+    <string name="commend_header">O que a galera comentou sobre \"$postTitle\"</string>
+    <string name="name_placeholder"><![CDATA[<name>]]></string>
+    <string name="email_placeholder"><![CDATA[<email>]]></string>
+    <string name="profile_picture_description">User profile picture</string>
 </resources>

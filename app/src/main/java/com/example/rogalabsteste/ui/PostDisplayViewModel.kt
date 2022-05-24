@@ -10,7 +10,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class PostDisplayViewModel(private val postService: PostService) : ViewModel() {
-    private val TAG = "PostDisplayActivity"
+    private val TAG = "PostDisplayViewModel"
 
     val listPosts = MutableLiveData<List<Post>>()
 

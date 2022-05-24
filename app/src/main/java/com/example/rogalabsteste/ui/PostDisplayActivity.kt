@@ -55,7 +55,7 @@ class PostDisplayActivity : AppCompatActivity() {
     fun onClickPost(post: Post) {
         currentCommentFragment = CommentDisplayFragment.newInstance(post)
         supportFragmentManager.beginTransaction()
-        .add(R.id.llPosts, currentCommentFragment!!)
+        .add(R.id.clPosts, currentCommentFragment!!)
         .commit()
         Log.d(TAG, "Post #${post.id} Clicked!")
     }
