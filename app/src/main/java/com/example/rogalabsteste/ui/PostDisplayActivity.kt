@@ -1,11 +1,11 @@
 package com.example.rogalabsteste.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.activity.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,8 +24,9 @@ class PostDisplayActivity : AppCompatActivity() {
         }
     }
 
-    private val postDisplayAdapter = PostDisplayAdapter(::toastOnClick)
+    private val postDisplayAdapter = PostDisplayAdapter(::onClickPost)
     private var hasOngoingRequest = false
+    private var currentCommentFragment: CommentDisplayFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,8 +52,21 @@ class PostDisplayActivity : AppCompatActivity() {
         postDisplayViewModel.fetchMorePosts()
     }
 
-    fun toastOnClick(post: Post) {
+    fun onClickPost(post: Post) {
+        currentCommentFragment = CommentDisplayFragment.newInstance(post)
+        supportFragmentManager.beginTransaction()
+        .add(R.id.llPosts, currentCommentFragment!!)
+        .commit()
         Log.d(TAG, "Post #${post.id} Clicked!")
+    }
+
+    override fun onBackPressed() {
+        if (currentCommentFragment == null) {
+            super.onBackPressed()
+            return
+        }
+        supportFragmentManager.beginTransaction().remove(currentCommentFragment!!).commit()
+        currentCommentFragment = null
     }
 
     private fun setUpScroller(recyclerView: RecyclerView, linearLayoutManager: LinearLayoutManager) {

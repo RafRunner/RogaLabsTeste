@@ -3,4 +3,5 @@
     <string name="postagens_recentes">Postagens Recentes</string>
     <string name="title_placeholder"><![CDATA[<Title>]]></string>
     <string name="body_placeholder"><![CDATA[<Body>]]></string>
+    <string name="commend_header">O que a galera comentou sobre $postTitle</string>
 </resources>
